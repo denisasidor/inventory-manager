@@ -12,4 +12,9 @@ class Item extends Model
         'location',
         'price',
     ];
+    public function stockMovements()
+    {
+        return $this->hasMany(StockMovement::class);
+    }
+
 }
