@@ -2,7 +2,11 @@
 
 namespace App\Models;
 
+
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\LowStockAlert;
+
 
 class StockMovement extends Model
 {
@@ -19,6 +23,8 @@ class StockMovement extends Model
                 if ($item->quantity < 0) {
                     $item->quantity = 0;
                 }
+                if ($item->quantity < 10) {
+                    Mail::to('adresa.ta@email.com')->send(new LowStockAlert($item));}
             }
 
             $item->save();
