@@ -3,6 +3,7 @@
 namespace App\Filament\Resources;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\TextInput;
+use Illuminate\Database\Eloquent\Model;
 
 use App\Filament\Resources\ItemResource\Pages;
 use App\Filament\Resources\ItemResource\RelationManagers;
@@ -17,13 +18,35 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class ItemResource extends Resource
 {
+
+    public static function canViewAny(): bool
+    {
+        return true;
+    }
+    public static function canCreate(): bool
+    {
+        return auth()->user()?->hasRole('admin') ?? false;
+    }
+
+    public static function canEdit(Model $record): bool
+    {
+        return auth()->user()?->hasRole('admin') ?? false;
+    }
+
+    public static function canDelete(Model $record): bool
+    {
+        return auth()->user()?->hasRole('admin') ?? false;
+    }
+
+
     protected static ?string $model = Item::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     public static function form(Form $form): Form
     {
-        return $form->schema([
+        return $form
+            ->schema([
             TextInput::make('name')
                 ->required()
                 ->label('Product Name'),
@@ -42,6 +65,7 @@ class ItemResource extends Resource
                 ->required()
                 ->label('Price'),
         ]);
+
     }
 
 

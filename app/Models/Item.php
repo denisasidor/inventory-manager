@@ -11,6 +11,7 @@ class Item extends Model
         'quantity',
         'location',
         'price',
+
     ];
     public function stockMovements()
     {

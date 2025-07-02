@@ -4,6 +4,9 @@ namespace App\Filament\Resources;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Tables\Columns\TextColumn;
+use Illuminate\Database\Eloquent\Model;
+
+
 
 
 use App\Filament\Resources\StockMovementResource\Pages;
@@ -19,13 +22,34 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class StockMovementResource extends Resource
 {
+
+    public static function canViewAny(): bool
+    {
+        return true;
+    }
+
+    public static function canCreate(): bool
+    {
+        return auth()->user()?->hasRole('admin') ?? false;
+    }
+
+    public static function canEdit(Model $record): bool
+    {
+        return auth()->user()?->hasRole('admin') ?? false;
+    }
+
+    public static function canDelete(Model $record): bool
+    {
+        return auth()->user()?->hasRole('admin') ?? false;
+    }
     protected static ?string $model = StockMovement::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     public static function form(Form $form): Form
     {
-        return $form->schema([
+        return $form
+            ->schema([
             Select::make('item_id')
                 ->relationship('item', 'name')
                 ->required()
@@ -46,12 +70,15 @@ class StockMovementResource extends Resource
 
     public static function table(Table $table): Table
     {
+
         return $table
+
             ->columns([
                 TextColumn::make('item.name')->label('Item'),
                 TextColumn::make('type')->label('Movement'),
                 TextColumn::make('quantity'),
                 TextColumn::make('created_at')->dateTime(),
+
             ])
             ->defaultSort('created_at', 'desc')
             ->filters([

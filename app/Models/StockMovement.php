@@ -10,6 +10,7 @@ use App\Mail\LowStockAlert;
 
 class StockMovement extends Model
 {
+
     protected static function booted(): void
     {
         static::created(function (StockMovement $movement) {
@@ -24,7 +25,7 @@ class StockMovement extends Model
                     $item->quantity = 0;
                 }
                 if ($item->quantity < 10) {
-                    Mail::to('adresa.ta@email.com')->send(new LowStockAlert($item));}
+                    Mail::to('denisasidor13@gmail.com')->send(new LowStockAlert($item));}
             }
 
             $item->save();
@@ -34,9 +35,11 @@ class StockMovement extends Model
     {
         return $this->belongsTo(Item::class);
     }
+
     protected $fillable = [
         'item_id',
         'type',
         'quantity',
+
     ];
 }
