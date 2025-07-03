@@ -104,4 +104,9 @@ class ItemResource extends Resource
             'edit' => Pages\EditItem::route('/{record}/edit'),
         ];
     }
+
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()->where('company_id', auth()->user()->company_id);
+    }
 }

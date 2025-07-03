@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Filament\Resources;
+use App\Models\Item;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Tables\Columns\TextColumn;
@@ -51,9 +52,12 @@ class StockMovementResource extends Resource
         return $form
             ->schema([
             Select::make('item_id')
-                ->relationship('item', 'name')
-                ->required()
-                ->label('Item'),
+                ->label('Item')
+                ->options(
+                    Item::where('company_id', auth()->user()->company_id)
+                        ->pluck('name', 'id')
+                )
+                ->required(),
 
             Select::make('type')
                 ->options([

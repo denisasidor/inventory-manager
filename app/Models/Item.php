@@ -11,11 +11,17 @@ class Item extends Model
         'quantity',
         'location',
         'price',
-
+        'company_id',
     ];
     public function stockMovements()
     {
         return $this->hasMany(StockMovement::class);
     }
+
+    public function company()
+    {
+        return $this->belongsTo(Company::class);
+    }
+
 
 }
