@@ -113,4 +113,12 @@ class StockMovementResource extends Resource
             'edit' => Pages\EditStockMovement::route('/{record}/edit'),
         ];
     }
+
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()
+            ->whereHas('item', function ($query) {
+                $query->where('company_id', auth()->user()->company_id);
+            });
+    }
 }

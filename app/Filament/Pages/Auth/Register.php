@@ -6,6 +6,7 @@ use App\Models\Company;
 use Filament\Forms\Components\TextInput;
 use Filament\Pages\Page;
 use Filament\Pages\Auth\Register as BaseRegister;
+use Spatie\Permission\Models\Role;
 
 class Register extends BaseRegister
 {
@@ -39,13 +40,15 @@ class Register extends BaseRegister
     protected function handleRegistration(array $data): \Illuminate\Database\Eloquent\Model
     {
         $companyId = Company::create(['name'=>$data['company_name']])->id;
-
-        return parent::handleRegistration([
+        $user = parent::handleRegistration([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => $data['password'],
             'company_id' => $companyId,
         ]);
+        $adminRole = Role::findOrCreate('admin');
+        $user->assignRole($adminRole);
+        return $user;
     }
 
 }
